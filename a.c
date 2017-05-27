@@ -1,5 +1,5 @@
-#include<stdio.h>
-#include<unistd.h>
+#include <stdio.h>
+#include <unistd.h>
 #define MAX_LINE 80
 
 int main(void){
@@ -10,76 +10,46 @@ int main(void){
 	while(should_run==1){
 		printf("CSCI3120> ");
 		fflush(stdout);
-
 		scanf ("%[^\n]%*c", args);
 		fflush(stdin);
-		if(strcmp(args,"exit")==0) { should_run=0; continue; }
-		//printf("Input: %s\n", args);
 
-    //fork child process uning fork()
-    //child process will invoke exevp()
-    //if command included &, parent will invoke wait()
-
-    //for(int i=0;i<5;i++) if(args[i]!=' ') printf("%c",args[i]);
-	//printf("%c\n", args[i]);
-
+		if(strcmp(args,"exit")==0){ 
+			should_run=0; 
+			continue; 
+		}
 		if(args[0]==' '||args==NULL) continue;
-		int i = 0;
 
-		int space=-1;
-		for(i=0;i<MAX_LINE/2 + 1;i++) if(args[i]==' ') space++;
-			printf("%d\n",space);
+
+		int i=0;
+		int num_commands=1;
+
+		for(i=0;i<MAX_LINE/2+1;i++) if(args[i]==' ') num_commands++;
+			printf("Num Commands: %d\n",num_commands);
 		fflush(stdout);
 
-		char *p = strtok (args, " ");
-
-		char *array[10];
+		char *p=strtok (args," ");
+		char *commands_array[num_commands];
 
 		i=0;
-		while (p != NULL){
-			array[i++] = p;
-			p = strtok (NULL, " ");
+		while (p!=NULL){
+			commands_array[i++]=p;
+			p=strtok (NULL," ");
 		}
 
-		for (i = 0; i < space; i++){
-			printf("%s\n", array[i]);
+		for (i=0;i<num_commands;i++){
+			printf("%s\n",commands_array[i]);
 			fflush(stdout);
 		} 
 		
-		array[space]=NULL;
+
+		commands_array[num_commands]=NULL;
+		execvp(commands_array[0],commands_array);
 
 
-		execvp(array[0],array);
+		for (i=0;i<num_commands;i++) commands_array[i]=NULL;
 
-
-
-
-
-
-		for (i = 0; i < space; i++) array[i]=NULL;
-
-			space=-1;
-
-		//now we have each word in array[1..space]
-
-
-
-		
-
-
-
-
-
-
-
-
-
-
-
-
-		
 	}
 
 
-	return 0;
+return 0;
 }
