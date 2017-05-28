@@ -102,7 +102,6 @@ int main(void){
 		
 
 
-		
 
 		int i=0;
 		int num_commands=1;
@@ -126,6 +125,17 @@ int main(void){
 			fflush(stdout);
 		} */
 		
+
+		commands_array[num_commands]=NULL;
+		if(strcmp(commands_array[num_commands-1],"&")==0) {printf("Parent must wait\n");fflush(stdout);}
+		execvp(commands_array[0],commands_array);
+
+
+		for (i=0;i<num_commands;i++) commands_array[i]=NULL;
+
+
+
+		/*
 		int should_parent_wait=0;
 		commands_array[num_commands]=NULL;
 		if(strcmp(commands_array[num_commands-1],"&")==0){
@@ -140,7 +150,7 @@ int main(void){
 		if(should_parent_wait==1)wait(NULL);
 		
 		for (i=0;i<num_commands;i++) commands_array[i]=NULL;
-		
+		*/
 
 
 	}
