@@ -3,12 +3,17 @@
 #include <stdlib.h>
 #define MAX_LINE 80
 
+
+
 typedef struct node {
 	int val;
 	char string[MAX_LINE/2 + 1];
 	struct node * next;
 } node_t;
 
+int size(node_t * head);
+void pushfront(node_t ** head, int val, char string[MAX_LINE/2 + 1]);
+void print_list(node_t * head);
 
 int main(void){
 
@@ -42,11 +47,11 @@ int main(void){
 		}
 		if(args[0]==' '||args==NULL) continue;
 
-		if(strcmp(args,"history")==0) { print_list(*head); continue; } //print list by item 
+		if(strcmp(args,"history")==0) { print_list(head); continue; } //print list by item 
 		if(strcmp(args,"!!")==0) { 
 		
-			if(strcmp(&head->string," ")==0) printf("No History.\n");
-			else printf("%s\n",&head->string);
+			if(loop_iteration==1) printf("No History.\n");
+			else printf("%s\n",head->string);
 			continue;
 		} //fetch recent list item and pass below
 
@@ -63,15 +68,15 @@ int main(void){
 			head->val = loop_iteration++;
 			strcpy(head->string, args);
 			head->next = NULL;
-			print_list(*head);
-			printf("Size:%d\n",size(*head));
+			print_list(head);
+			//printf("Size:%d\n",size(*head));
 
 		}
 		else{
 			pushfront(&head,loop_iteration++,args); 
 			//push(head,loop_iteration++,args); 
-			print_list(*head);
-			printf("Size:%d\n",size(*head));
+			print_list(head);
+			//printf("Size:%d\n",size(*head));
 		}
 		
 
