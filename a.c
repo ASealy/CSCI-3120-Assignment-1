@@ -126,26 +126,21 @@ int main(void){
 			fflush(stdout);
 		} */
 		
-
+		int should_parent_wait=0;
 		commands_array[num_commands]=NULL;
-		if(strcmp(commands_array[num_commands-1],"&")==0) {printf("Parent must wait\n");fflush(stdout);}
-		execvp(commands_array[0],commands_array);
-
-
-		for (i=0;i<num_commands;i++) commands_array[i]=NULL;
-
-
-
-		/*
+		if(strcmp(commands_array[num_commands-1],"&")==0){
+			should_parent_wait=1;
+			commands_array[num_commands-1]=NULL;
+		}
 		pid_t pid=fork();
 		if(pid==0){
 			commands_array[num_commands]=NULL;
 			execvp(commands_array[0],commands_array);
 		}
-
-		wait(NULL);
+		if(should_parent_wait==1)wait(NULL);
+		
 		for (i=0;i<num_commands;i++) commands_array[i]=NULL;
-		*/
+		
 
 
 	}
