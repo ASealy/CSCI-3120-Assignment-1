@@ -48,19 +48,36 @@ int main(void){
 		if(args[0]==' '||args==NULL) continue;
 
 		if(strcmp(args,"history")==0) { print_list(head); continue; } //print list by item 
-		if(strcmp(args,"!!")==0) { 
-		
-			if(loop_iteration==1) printf("No History.\n");
-			else printf("%s\n",head->string);
-			continue;
-		} //fetch recent list item and pass below
+		if(strcmp(args,"!!")==0) {//fetch recent list item and pass below
 
-		if(args[0]=='!') { 
+			if(loop_iteration==1) {printf("No History.\n");fflush(stdout);}
+			else strcpy(args,head->string);
+			//continue;
+		} 
 
-			//printf("%d\n",args[1]-48);
-			//printf("\nIndex found? 1 if yes: %d\n",get_index(*head,args[1]-48));
-			continue;
-		} //fetch args[1] from list and pass below
+		if(args[0]=='!') { //fetch args[1] from list and pass below
+
+			
+			node_t * current = head;
+			int search_first_10=0,found=0;
+			while (current != NULL && search_first_10<10) {
+				if(current->val==args[1]-48){ 
+					strcpy(args,current->string);
+					found=1; 
+
+					//continue;
+				}
+				current = current->next;
+				search_first_10++;
+			}
+			if(found==0){
+				printf("No such command in history...\n");
+				fflush(stdout); 
+				continue;
+			}
+			
+
+		} 
 		
 
 		if(first_command==0){
@@ -92,9 +109,9 @@ int main(void){
 
 		for(i=0;i<MAX_LINE/2+1;i++) if(args[i]==' ') num_commands++;
 			//printf("Num Commands: %d\n",num_commands);
-			fflush(stdout);
+			//fflush(stdout);
 
-		char *p=strtok (args," ");
+			char *p=strtok (args," ");
 		char *commands_array[num_commands];
 
 		i=0;
@@ -111,6 +128,7 @@ int main(void){
 		
 
 		commands_array[num_commands]=NULL;
+		if(strcmp(commands_array[num_commands-1],"&")==0) {printf("Parent must wait\n");fflush(stdout);}
 		execvp(commands_array[0],commands_array);
 
 
@@ -150,21 +168,14 @@ int size(node_t * head) {
 	return count;
 }
 
-int get_index(node_t * head,int index) {
-	node_t * current = head;
-	while (current != NULL) {
-		if(current->val==index) return 1;
-		current = current->next;
-	}
-	return 0;
-}
+
 
 void print_list(node_t * head) {
 	node_t * current = head;
 	int print10=0;
 	while (current != NULL && print10<10) {
-		printf("%d - ", current->val);
-		printf("%s\n", current->string);
+		printf("%d - ", current->val);fflush(stdout);
+		printf("%s\n", current->string);fflush(stdout);
 		current = current->next;
 		print10++;
 	}
@@ -178,40 +189,4 @@ void pushfront(node_t ** head, int val, char string[MAX_LINE/2 + 1]) {
 	strcpy(new_node->string,string);
 	new_node->next = *head;
 	*head = new_node;
-}
-
-void push(node_t * head, int val, char string[MAX_LINE/2 + 1]) {
-	node_t * current = head;
-	while (current->next != NULL) {
-		current = current->next;
-	}
-
-    /* now we can add a new variable */
-	current->next = malloc(sizeof(node_t));
-	current->next->val = val;
-	strcpy(current->next->string,string);
-	current->next->next = NULL;
-}
-
-int remove_last(node_t * head) {
-	int retval = 0;
-    /* if there is only one item in the list, remove it */
-	if (head->next == NULL) {
-		retval = head->val;
-		free(head);
-		return retval;
-	}
-
-    /* get to the last node in the list */
-	node_t * current = head;
-	while (current->next->next != NULL) {
-		current = current->next;
-	}
-
-    /* now current points to the last item of the list, so let's remove current->next */
-	retval = current->next->val;
-	free(current->next);
-	current->next = NULL;
-	return retval;
-
 }
