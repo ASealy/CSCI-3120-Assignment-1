@@ -66,8 +66,9 @@ int main(void){
 			digit_one=args[1]-48;
 			digit_two=args[2]-48;
 			if(args[3]!=32)digit_three=args[3]-48;
-			else digit_three=-48;		
-			for(int i=0;i<4;i++) args[i]=0;
+			else digit_three=-48;	
+			int i;	
+			for(i=0;i<4;i++) args[i]=0;
 
 			if(digit_one!=-48&&digit_two==-48&&digit_three==-48) search_for=digit_one;
 			if(digit_one!=-48&&digit_two!=-48&&digit_three==-48) search_for=digit_one*10+digit_two;
