@@ -112,16 +112,11 @@ int main(void){
 			//the value of the head is set to the args string from above 
 			strcpy(head->string, args);
 			head->next = NULL;
-			//print_list(head);
-			//printf("Size:%d\n",size(*head));
 
 		}
 		//if it is not the first command, push it to the front of the list
 		else{
 			pushfront(&head,loop_iteration++,args); 
-			//push(head,loop_iteration++,args); 
-			//print_list(head);
-			//printf("Size:%d\n",size(*head));
 		}
 		
 		//this parses the args string into an array of strings that is then passed to the execvp function 
@@ -149,27 +144,31 @@ int main(void){
 		for (i=0;i<num_commands;i++) commands_array[i]=NULL;
 		*/
 
-
-
+		//should wait for child is set to 0
 		int should_wait=0;
+		//the index after the last command is set to null
 		commands_array[num_commands]=NULL;
+		//if the & is used
 		if(strcmp(commands_array[num_commands-1],"&")==0){
+			//set the index with the & to null
 			commands_array[num_commands-1]=NULL;
+			//if & is used, parent should not wait, they should execute concurrently 
 			should_wait=1;
 		}
+		//for process
 		pid_t pid=fork();
+		//child process
 		if(pid==0){
+			//execute up to the null index
 			commands_array[num_commands]=NULL;
 			execvp(commands_array[0],commands_array);
-	
 		}
-
+		//is parent and should wait is 0, therefore should wait for child
 		if(pid>0) if(should_wait==0) wait(NULL);
 		
+		//clear the commands 
 		for (i=0;i<num_commands;i++) commands_array[i]=NULL;
-	
 		should_wait=0;
-		pid=0;
 
 	}
 
