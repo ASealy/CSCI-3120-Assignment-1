@@ -53,16 +53,18 @@ int main(void){
 		}
 		//this will execute the most recent command
 		if(strcmp(args,"!!")==0) {
-			if(loop_iteration==1){printf("No History.\n"); fflush(stdout);}
+			if(loop_iteration==1){printf("No History.\n"); fflush(stdout); continue;}
 			//fetch most recent linked list item and pass below to args 
 			else strcpy(args,head->string);
 		} 
 
 		//this will find a specific item in the history
-		if(args[0]=='!') {
+		if(args[0]=='!'&&args[1]!='!') {
 
 			//the three digits after the ! are parsed into a string
 			//this means that history is only supported up to 999 items, but this can be easily expanded
+			printf("Args: %d %d %d\n",args[1],args[2],args[3]);
+			if(args[2]==0) args[3]=0;
 			int digit_one=0,digit_two=0,digit_three=0,search_for=0;
 			digit_one=args[1]-48;
 			digit_two=args[2]-48;
@@ -70,7 +72,7 @@ int main(void){
 			else digit_three=-48;	
 			int i;	
 			for(i=0;i<4;i++) args[i]=0;
-
+			printf("Digits: %d %d %d\n",digit_one,digit_two,digit_three);
 			if(digit_one!=-48&&digit_two==-48&&digit_three==-48) search_for=digit_one;
 			if(digit_one!=-48&&digit_two!=-48&&digit_three==-48) search_for=digit_one*10+digit_two;
 			if(digit_one!=-48&&digit_two!=-48&&digit_three!=-48) search_for=digit_one*100+digit_two*10+digit_three;
@@ -128,13 +130,13 @@ int main(void){
 
 		for(i=0;i<MAX_LINE/2+1;i++) if(args[i]==' ') num_commands++;
 
-		char *p=strtok (args," ");
+		char *p=(char *)strtok (args," ");
 		char *commands_array[num_commands];
 
 		i=0;
 		while (p!=NULL){
 			commands_array[i++]=p;
-			p=strtok (NULL," ");
+			p=(char *)strtok (NULL," ");
 		}
 
 		//Windows testing
@@ -159,6 +161,7 @@ int main(void){
 		if(pid==0){
 			commands_array[num_commands]=NULL;
 			execvp(commands_array[0],commands_array);
+	
 		}
 
 		if(pid>0) if(should_wait==0) wait(NULL);
@@ -166,6 +169,7 @@ int main(void){
 		for (i=0;i<num_commands;i++) commands_array[i]=NULL;
 	
 		should_wait=0;
+		pid=0;
 
 	}
 
